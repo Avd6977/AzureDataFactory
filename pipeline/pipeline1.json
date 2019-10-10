@@ -37,7 +37,7 @@
 							},
 							{
 								"source": {
-									"path": "$['Doc']['schamaDef']['name']"
+									"path": "$['Doc']['schemaDef']['name']"
 								},
 								"sink": {
 									"name": "Name"
