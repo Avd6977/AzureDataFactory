@@ -1,0 +1,224 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "DataFactoryAvd"
+		},
+		"KrakenDB_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'KrakenDB'"
+		},
+		"MySQLDatabase_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'MySQLDatabase'"
+		},
+		"KrakenDB_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "Squidex"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/KrakenDB')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Kraken QA",
+				"annotations": [],
+				"type": "MongoDbV2",
+				"typeProperties": {
+					"connectionString": "[parameters('KrakenDB_connectionString')]",
+					"database": "[parameters('KrakenDB_properties_typeProperties_database')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MySQLDatabase')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('MySQLDatabase_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/KrakenQASchemas')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Content Types (Schemas) for KrakenQA DB",
+				"linkedServiceName": {
+					"referenceName": "KrakenDB",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "MongoDbV2Collection",
+				"schema": [],
+				"typeProperties": {
+					"collection": "States_Schemas"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/KrakenDB')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/QASchemas')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "MySQLDatabase",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "ContentTypes"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/MySQLDatabase')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "MongoToSQL",
+						"description": "Copy data from MongoDB to SQL",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "MongoDbV2Source",
+								"batchSize": 100
+							},
+							"sink": {
+								"type": "AzureSqlSink"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"path": "_id"
+										},
+										"sink": {
+											"name": "Id"
+										}
+									},
+									{
+										"source": {
+											"path": "Doc.schameDef.name"
+										},
+										"sink": {
+											"name": "Name"
+										}
+									},
+									{
+										"source": {
+											"path": "Doc.schemaDef.isPublished"
+										},
+										"sink": {
+											"name": "IsPublished"
+										}
+									},
+									{
+										"source": {
+											"path": "Doc.isDeleted"
+										},
+										"sink": {
+											"name": "IsDeleted",
+											"type": "Boolean"
+										}
+									},
+									{
+										"source": {
+											"path": "Doc.lastModified"
+										},
+										"sink": {
+											"name": "LastModified",
+											"type": "DateTimeOffset"
+										}
+									},
+									{
+										"source": {
+											"path": "Doc.lastModifiedBy"
+										},
+										"sink": {
+											"name": "LastModifiedBy",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "Doc.created"
+										},
+										"sink": {
+											"name": "Created",
+											"type": "DateTimeOffset"
+										}
+									},
+									{
+										"source": {
+											"path": "Doc.createdBy"
+										},
+										"sink": {
+											"name": "CreatedBy",
+											"type": "String"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "KrakenQASchemas",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "QASchemas",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/KrakenQASchemas')]",
+				"[concat(variables('factoryId'), '/datasets/QASchemas')]"
+			]
+		}
+	]
+}
