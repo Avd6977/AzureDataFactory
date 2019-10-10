@@ -98,7 +98,7 @@
 							},
 							{
 								"source": {
-									"path": "$['@split(Doc.appId, \\',\\')[0]']"
+									"path": "$['Doc.appId']"
 								},
 								"sink": {
 									"name": "AppId",
