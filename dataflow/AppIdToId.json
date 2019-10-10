@@ -9,7 +9,7 @@
 						"referenceName": "QASchemas",
 						"type": "DatasetReference"
 					},
-					"name": "ContentTypes"
+					"name": "ContentTypesInput"
 				}
 			],
 			"sinks": [
@@ -26,7 +26,7 @@
 					"name": "AppIdDerived"
 				}
 			],
-			"script": "\n\nsource(output(\n\t\tId as string,\n\t\tAppId as string,\n\t\tName as string,\n\t\tIsPublished as boolean,\n\t\tIsDeleted as boolean,\n\t\tCreated as string,\n\t\tCreatedBy as string,\n\t\tLastModifiedBy as string,\n\t\tLastModified as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tlimit: 100,\n\tinferDriftedColumnTypes: true,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> ContentTypes\nContentTypes derive(AppId = split(AppId, ',')[0]) ~> AppIdDerived\nAppIdDerived sink(input(\n\t\tId as string,\n\t\tAppId as string,\n\t\tName as string,\n\t\tIsPublished as boolean,\n\t\tIsDeleted as boolean,\n\t\tCreated as string,\n\t\tCreatedBy as string,\n\t\tLastModifiedBy as string,\n\t\tLastModified as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table') ~> ContentTypes"
+			"script": "\n\nsource(output(\n\t\tId as string,\n\t\tAppId as string,\n\t\tName as string,\n\t\tIsPublished as boolean,\n\t\tIsDeleted as boolean,\n\t\tCreated as string,\n\t\tCreatedBy as string,\n\t\tLastModifiedBy as string,\n\t\tLastModified as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tlimit: 100,\n\tinferDriftedColumnTypes: true,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> ContentTypesInput\nContentTypesInput derive(AppId = split(AppId, ',')[0]) ~> AppIdDerived\nAppIdDerived sink(input(\n\t\tId as string,\n\t\tAppId as string,\n\t\tName as string,\n\t\tIsPublished as boolean,\n\t\tIsDeleted as boolean,\n\t\tCreated as string,\n\t\tCreatedBy as string,\n\t\tLastModifiedBy as string,\n\t\tLastModified as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table') ~> ContentTypes"
 		}
 	}
 }
