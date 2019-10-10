@@ -127,7 +127,7 @@
 								"mappings": [
 									{
 										"source": {
-											"path": "_id"
+											"path": "$['_id']"
 										},
 										"sink": {
 											"name": "Id"
@@ -135,7 +135,7 @@
 									},
 									{
 										"source": {
-											"path": "Doc.schameDef.name"
+											"path": "$['Doc']['schemaDef']['name']"
 										},
 										"sink": {
 											"name": "Name"
@@ -143,7 +143,7 @@
 									},
 									{
 										"source": {
-											"path": "Doc.schemaDef.isPublished"
+											"path": "$['Doc']['schemaDef']['isPublished']"
 										},
 										"sink": {
 											"name": "IsPublished"
@@ -151,7 +151,7 @@
 									},
 									{
 										"source": {
-											"path": "Doc.isDeleted"
+											"path": "$['Doc']['isDeleted']"
 										},
 										"sink": {
 											"name": "IsDeleted",
@@ -160,7 +160,7 @@
 									},
 									{
 										"source": {
-											"path": "Doc.lastModified"
+											"path": "$['Doc']['lastModified']"
 										},
 										"sink": {
 											"name": "LastModified",
@@ -169,7 +169,7 @@
 									},
 									{
 										"source": {
-											"path": "Doc.lastModifiedBy"
+											"path": "$['Doc']['lastModifiedBy']"
 										},
 										"sink": {
 											"name": "LastModifiedBy",
@@ -178,7 +178,7 @@
 									},
 									{
 										"source": {
-											"path": "Doc.created"
+											"path": "$['Doc']['created']"
 										},
 										"sink": {
 											"name": "Created",
@@ -187,7 +187,7 @@
 									},
 									{
 										"source": {
-											"path": "Doc.createdBy"
+											"path": "$['Doc']['createdBy']"
 										},
 										"sink": {
 											"name": "CreatedBy",
@@ -218,6 +218,44 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/KrakenQASchemas')]",
 				"[concat(variables('factoryId'), '/datasets/QASchemas')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FirstTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "pipeline1",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2019-10-10T10:30:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								22
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/pipeline1')]"
 			]
 		}
 	]

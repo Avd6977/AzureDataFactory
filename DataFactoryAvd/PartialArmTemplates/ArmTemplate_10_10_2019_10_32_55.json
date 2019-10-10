@@ -6,18 +6,6 @@
 			"type": "string",
 			"metadata": "Data Factory name",
 			"defaultValue": "DataFactoryAvd"
-		},
-		"KrakenDB_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'KrakenDB'"
-		},
-		"MySQLDatabase_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'MySQLDatabase'"
-		},
-		"KrakenDB_properties_typeProperties_database": {
-			"type": "string",
-			"defaultValue": "Squidex"
 		}
 	},
 	"variables": {
@@ -130,93 +118,18 @@
 						"inputs": [
 							{
 								"referenceName": "KrakenQASchemas",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							}
 						],
 						"outputs": [
 							{
 								"referenceName": "QASchemas",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							}
 						]
 					}
 				],
 				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/KrakenQASchemas')]",
-				"[concat(variables('factoryId'), '/datasets/QASchemas')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/KrakenQASchemas')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Content Types (Schemas) for KrakenQA DB",
-				"linkedServiceName": {
-					"referenceName": "KrakenDB",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "MongoDbV2Collection",
-				"schema": [],
-				"typeProperties": {
-					"collection": "States_Schemas"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/KrakenDB')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/QASchemas')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "MySQLDatabase",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "ContentTypes"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/MySQLDatabase')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/KrakenDB')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Kraken QA",
-				"annotations": [],
-				"type": "MongoDbV2",
-				"typeProperties": {
-					"connectionString": "[parameters('KrakenDB_connectionString')]",
-					"database": "[parameters('KrakenDB_properties_typeProperties_database')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/MySQLDatabase')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureSqlDatabase",
-				"typeProperties": {
-					"connectionString": "[parameters('MySQLDatabase_connectionString')]"
-				}
 			},
 			"dependsOn": []
 		},
@@ -232,8 +145,7 @@
 						"pipelineReference": {
 							"referenceName": "pipeline1",
 							"type": "PipelineReference"
-						},
-						"parameters": {}
+						}
 					}
 				],
 				"type": "ScheduleTrigger",
