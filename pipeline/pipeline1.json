@@ -29,7 +29,7 @@
 						"mappings": [
 							{
 								"source": {
-									"path": "_id"
+									"path": "$['_id']"
 								},
 								"sink": {
 									"name": "Id"
@@ -37,7 +37,7 @@
 							},
 							{
 								"source": {
-									"path": "Doc.schameDef.name"
+									"path": "$['Doc']['schamaDef']['name']"
 								},
 								"sink": {
 									"name": "Name"
@@ -45,7 +45,7 @@
 							},
 							{
 								"source": {
-									"path": "Doc.schemaDef.isPublished"
+									"path": "$['Doc']['schemaDef']['isPublished']"
 								},
 								"sink": {
 									"name": "IsPublished"
@@ -53,7 +53,7 @@
 							},
 							{
 								"source": {
-									"path": "Doc.isDeleted"
+									"path": "$['Doc']['isDeleted']"
 								},
 								"sink": {
 									"name": "IsDeleted",
@@ -62,7 +62,7 @@
 							},
 							{
 								"source": {
-									"path": "Doc.lastModified"
+									"path": "$['Doc']['lastModified']"
 								},
 								"sink": {
 									"name": "LastModified",
@@ -71,7 +71,7 @@
 							},
 							{
 								"source": {
-									"path": "Doc.lastModifiedBy"
+									"path": "$['Doc']['lastModifiedBy']"
 								},
 								"sink": {
 									"name": "LastModifiedBy",
@@ -80,7 +80,7 @@
 							},
 							{
 								"source": {
-									"path": "Doc.created"
+									"path": "$['Doc']['created']"
 								},
 								"sink": {
 									"name": "Created",
@@ -89,7 +89,7 @@
 							},
 							{
 								"source": {
-									"path": "Doc.createdBy"
+									"path": "$['Doc']['createdBy']"
 								},
 								"sink": {
 									"name": "CreatedBy",
