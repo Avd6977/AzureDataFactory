@@ -98,11 +98,10 @@
 							},
 							{
 								"source": {
-									"path": "$['Doc.appId']"
+									"path": "$['Doc']['appId']"
 								},
 								"sink": {
-									"name": "AppId",
-									"type": "String"
+									"name": "AppId"
 								}
 							}
 						]
