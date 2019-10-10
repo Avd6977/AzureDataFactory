@@ -1,0 +1,118 @@
+{
+	"name": "pipeline1",
+	"properties": {
+		"activities": [
+			{
+				"name": "MongoToSQL",
+				"description": "Copy data from MongoDB to SQL",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "MongoDbV2Source",
+						"batchSize": 100
+					},
+					"sink": {
+						"type": "AzureSqlSink"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "_id"
+								},
+								"sink": {
+									"name": "Id"
+								}
+							},
+							{
+								"source": {
+									"path": "Doc.schameDef.name"
+								},
+								"sink": {
+									"name": "Name"
+								}
+							},
+							{
+								"source": {
+									"path": "Doc.schemaDef.isPublished"
+								},
+								"sink": {
+									"name": "IsPublished"
+								}
+							},
+							{
+								"source": {
+									"path": "Doc.isDeleted"
+								},
+								"sink": {
+									"name": "IsDeleted",
+									"type": "Boolean"
+								}
+							},
+							{
+								"source": {
+									"path": "Doc.lastModified"
+								},
+								"sink": {
+									"name": "LastModified",
+									"type": "DateTimeOffset"
+								}
+							},
+							{
+								"source": {
+									"path": "Doc.lastModifiedBy"
+								},
+								"sink": {
+									"name": "LastModifiedBy",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "Doc.created"
+								},
+								"sink": {
+									"name": "Created",
+									"type": "DateTimeOffset"
+								}
+							},
+							{
+								"source": {
+									"path": "Doc.createdBy"
+								},
+								"sink": {
+									"name": "CreatedBy",
+									"type": "String"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "KrakenQASchemas",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "QASchemas",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": []
+	}
+}

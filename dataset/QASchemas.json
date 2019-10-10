@@ -1,0 +1,16 @@
+{
+	"name": "QASchemas",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "MySQLDatabase",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "ContentTypes"
+		}
+	}
+}

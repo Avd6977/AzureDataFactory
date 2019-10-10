@@ -1,0 +1,16 @@
+{
+	"name": "KrakenQASchemas",
+	"properties": {
+		"description": "Content Types (Schemas) for KrakenQA DB",
+		"linkedServiceName": {
+			"referenceName": "KrakenDB",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "MongoDbV2Collection",
+		"schema": [],
+		"typeProperties": {
+			"collection": "States_Schemas"
+		}
+	}
+}
