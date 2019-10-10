@@ -95,6 +95,15 @@
 									"name": "CreatedBy",
 									"type": "String"
 								}
+							},
+							{
+								"source": {
+									"path": "$['split(Doc.appId, \\',\\')[0]']"
+								},
+								"sink": {
+									"name": "AppId",
+									"type": "String"
+								}
 							}
 						]
 					}
