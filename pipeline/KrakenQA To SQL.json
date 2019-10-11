@@ -119,6 +119,66 @@
 						"type": "DatasetReference"
 					}
 				]
+			},
+			{
+				"name": "SplitAppId",
+				"description": "Split AppId for table into AppId and AppName",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "MongoToSQL",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[SplitAppId]",
+					"storedProcedureParameters": {
+						"tableName": {
+							"value": "ContentTypes",
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "MySQLDatabase",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "ClearMongoData",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[ClearMongoData]",
+					"storedProcedureParameters": {
+						"tableName": {
+							"value": "ContentTypes",
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "MySQLDatabase",
+					"type": "LinkedServiceReference"
+				}
 			}
 		],
 		"annotations": []
