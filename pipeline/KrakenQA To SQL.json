@@ -6,7 +6,14 @@
 				"name": "MongoToSQL",
 				"description": "Copy data from MongoDB to SQL",
 				"type": "Copy",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "ClearMongoData",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
