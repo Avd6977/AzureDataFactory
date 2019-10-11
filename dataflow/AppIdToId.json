@@ -24,9 +24,12 @@
 			"transformations": [
 				{
 					"name": "AppIdDerived"
+				},
+				{
+					"name": "AlterAppId"
 				}
 			],
-			"script": "\n\nsource(output(\n\t\tId as string,\n\t\tAppId as string,\n\t\tName as string,\n\t\tIsPublished as boolean,\n\t\tIsDeleted as boolean,\n\t\tCreated as string,\n\t\tCreatedBy as string,\n\t\tLastModifiedBy as string,\n\t\tLastModified as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tlimit: 100,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> ContentTypesInput\nContentTypesInput derive(AppId = substring(AppId, 0, 36)\r\n) ~> AppIdDerived\nAppIdDerived sink(input(\n\t\tId as string,\n\t\tAppId as string,\n\t\tName as string,\n\t\tIsPublished as boolean,\n\t\tIsDeleted as boolean,\n\t\tCreated as string,\n\t\tCreatedBy as string,\n\t\tLastModifiedBy as string,\n\t\tLastModified as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\ttruncate:true,\n\tformat: 'table',\n\tkeys:['Id']) ~> ContentTypesOutput"
+			"script": "\n\nsource(output(\n\t\tId as string,\n\t\tAppId as string,\n\t\tName as string,\n\t\tIsPublished as boolean,\n\t\tIsDeleted as boolean,\n\t\tCreated as string,\n\t\tCreatedBy as string,\n\t\tLastModifiedBy as string,\n\t\tLastModified as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tlimit: 100,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> ContentTypesInput\nAlterAppId derive(AppId = substring(AppId, 0, 36)\r\n) ~> AppIdDerived\nContentTypesInput alterRow(updateIf(length(AppId) > 36)) ~> AlterAppId\nAppIdDerived sink(input(\n\t\tId as string,\n\t\tAppId as string,\n\t\tName as string,\n\t\tIsPublished as boolean,\n\t\tIsDeleted as boolean,\n\t\tCreated as string,\n\t\tCreatedBy as string,\n\t\tLastModifiedBy as string,\n\t\tLastModified as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tformat: 'table',\n\tkeys:['Id']) ~> ContentTypesOutput"
 		}
 	}
 }
