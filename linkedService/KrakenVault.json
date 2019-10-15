@@ -1,0 +1,10 @@
+{
+	"name": "KrakenVault",
+	"properties": {
+		"annotations": [],
+		"type": "AzureKeyVault",
+		"typeProperties": {
+			"baseUrl": "https://KrakenVault.vault.azure.net/"
+		}
+	}
+}
