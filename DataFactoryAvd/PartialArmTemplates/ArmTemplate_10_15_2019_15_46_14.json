@@ -6,265 +6,12 @@
 			"type": "string",
 			"metadata": "Data Factory name",
 			"defaultValue": "DataFactoryAvd"
-		},
-		"KrakenDB_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'KrakenDB'"
-		},
-		"MySQLDatabase_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'MySQLDatabase'"
-		},
-		"KrakenDB_properties_typeProperties_database": {
-			"type": "string",
-			"defaultValue": "Squidex"
-		},
-		"KrakenVault_properties_typeProperties_baseUrl": {
-			"type": "string",
-			"defaultValue": "https://KrakenVault.vault.azure.net/"
-		},
-		"QA Elastic_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://fed50f2acfd5466b950d6a162b6a0ee4.us-east-1.aws.found.io:9243/"
-		},
-		"QA Elastic_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "kraken"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
-		{
-			"name": "[concat(parameters('factoryName'), '/KrakenDB')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Kraken QA",
-				"annotations": [],
-				"type": "MongoDbV2",
-				"typeProperties": {
-					"connectionString": "[parameters('KrakenDB_connectionString')]",
-					"database": "[parameters('KrakenDB_properties_typeProperties_database')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/KrakenVault')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureKeyVault",
-				"typeProperties": {
-					"baseUrl": "[parameters('KrakenVault_properties_typeProperties_baseUrl')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/MySQLDatabase')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureSqlDatabase",
-				"typeProperties": {
-					"connectionString": "[parameters('MySQLDatabase_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/KrakenQASchemas')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Content Types (Schemas) for KrakenQA DB",
-				"linkedServiceName": {
-					"referenceName": "KrakenDB",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "MongoDbV2Collection",
-				"schema": [],
-				"typeProperties": {
-					"collection": "States_Schemas"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/KrakenDB')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/QAContent')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "MySQLDatabase",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "Id",
-						"type": "nvarchar"
-					},
-					{
-						"name": "AppId",
-						"type": "nvarchar"
-					},
-					{
-						"name": "AppName",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ContentTypeId",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ContentTypeName",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Name",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Status",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Data",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PermissionSet",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Categories",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Created",
-						"type": "datetimeoffset",
-						"scale": 7
-					},
-					{
-						"name": "CreatedBy",
-						"type": "nvarchar"
-					},
-					{
-						"name": "LastModifiedBy",
-						"type": "nvarchar"
-					},
-					{
-						"name": "LastModified",
-						"type": "datetimeoffset",
-						"scale": 7
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "Content"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/MySQLDatabase')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/QASchemas')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "MySQLDatabase",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "Id",
-						"type": "nvarchar"
-					},
-					{
-						"name": "AppId",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Name",
-						"type": "nvarchar"
-					},
-					{
-						"name": "IsPublished",
-						"type": "bit"
-					},
-					{
-						"name": "IsDeleted",
-						"type": "bit"
-					},
-					{
-						"name": "Created",
-						"type": "datetimeoffset",
-						"scale": 7
-					},
-					{
-						"name": "CreatedBy",
-						"type": "nvarchar"
-					},
-					{
-						"name": "LastModifiedBy",
-						"type": "nvarchar"
-					},
-					{
-						"name": "LastModified",
-						"type": "datetimeoffset",
-						"scale": 7
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "ContentTypes"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/MySQLDatabase')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/QA Elastic')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "RestService",
-				"typeProperties": {
-					"url": "[parameters('QA Elastic_properties_typeProperties_url')]",
-					"enableServerCertificateValidation": true,
-					"authenticationType": "Basic",
-					"userName": "[parameters('QA Elastic_properties_typeProperties_userName')]",
-					"password": {
-						"type": "AzureKeyVaultSecret",
-						"store": {
-							"referenceName": "KrakenVault",
-							"type": "LinkedServiceReference"
-						},
-						"secretName": "elasticPassword"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/KrakenVault')]"
-			]
-		},
 		{
 			"name": "[concat(parameters('factoryName'), '/KrakenQA To SQL')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
@@ -386,15 +133,13 @@
 						"inputs": [
 							{
 								"referenceName": "KrakenQASchemas",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							}
 						],
 						"outputs": [
 							{
 								"referenceName": "QASchemas",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							}
 						]
 					},
@@ -460,89 +205,6 @@
 					}
 				],
 				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/KrakenQASchemas')]",
-				"[concat(variables('factoryId'), '/datasets/QASchemas')]",
-				"[concat(variables('factoryId'), '/linkedServices/MySQLDatabase')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/QAElasticContent')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "QA Elastic",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "RestResource",
-				"typeProperties": {
-					"relativeUrl": "/krakenqa_states_contents/elasticcontententity/_search"
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/QA Elastic')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/QAElasticContent_Paged')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "QA Elastic",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "RestResource",
-				"typeProperties": {
-					"relativeUrl": "/_search/scroll"
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/QA Elastic')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AppIdToId')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "QASchemas",
-								"type": "DatasetReference"
-							},
-							"name": "ContentTypesInput",
-							"typeProperties": {}
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "QASchemas",
-								"type": "DatasetReference"
-							},
-							"name": "ContentTypesOutput"
-						}
-					],
-					"transformations": [
-						{
-							"name": "AppIdDerived"
-						},
-						{
-							"name": "AlterAppId"
-						}
-					],
-					"script": "\n\nsource(output(\n\t\tId as string,\n\t\tAppId as string,\n\t\tName as string,\n\t\tIsPublished as boolean,\n\t\tIsDeleted as boolean,\n\t\tCreated as string,\n\t\tCreatedBy as string,\n\t\tLastModifiedBy as string,\n\t\tLastModified as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tlimit: 100,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> ContentTypesInput\nAlterAppId derive(AppId = substring(AppId, 0, 36)) ~> AppIdDerived\nContentTypesInput alterRow(updateIf(length(AppId)>36)) ~> AlterAppId\nAppIdDerived sink(input(\n\t\tId as string,\n\t\tAppId as string,\n\t\tName as string,\n\t\tIsPublished as boolean,\n\t\tIsDeleted as boolean,\n\t\tCreated as string,\n\t\tCreatedBy as string,\n\t\tLastModifiedBy as string,\n\t\tLastModified as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tformat: 'table',\n\tkeys:['Id']) ~> ContentTypesOutput"
-				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/QASchemas')]"
@@ -708,15 +370,13 @@
 						"inputs": [
 							{
 								"referenceName": "QAElasticContent",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							}
 						],
 						"outputs": [
 							{
 								"referenceName": "QAContent",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							}
 						]
 					},
@@ -772,8 +432,7 @@
 							},
 							"dataset": {
 								"referenceName": "QAContent",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							}
 						}
 					},
@@ -949,15 +608,13 @@
 									"inputs": [
 										{
 											"referenceName": "QAElasticContent",
-											"type": "DatasetReference",
-											"parameters": {}
+											"type": "DatasetReference"
 										}
 									],
 									"outputs": [
 										{
 											"referenceName": "QAContent",
-											"type": "DatasetReference",
-											"parameters": {}
+											"type": "DatasetReference"
 										}
 									]
 								},
@@ -1017,8 +674,223 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/QAElasticContent')]",
-				"[concat(variables('factoryId'), '/datasets/QAContent')]",
-				"[concat(variables('factoryId'), '/linkedServices/MySQLDatabase')]"
+				"[concat(variables('factoryId'), '/datasets/QAContent')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/QAContent')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "MySQLDatabase",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "Id",
+						"type": "nvarchar"
+					},
+					{
+						"name": "AppId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "AppName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ContentTypeId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ContentTypeName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Status",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Data",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PermissionSet",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Categories",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Created",
+						"type": "datetimeoffset",
+						"scale": 7
+					},
+					{
+						"name": "CreatedBy",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LastModifiedBy",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LastModified",
+						"type": "datetimeoffset",
+						"scale": 7
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Content"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/QAElasticContent')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "QA Elastic",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "RestResource",
+				"typeProperties": {
+					"relativeUrl": "/krakenqa_states_contents/elasticcontententity/_search"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/QA Elastic')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/QAElasticContent_Paged')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "QA Elastic",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "RestResource",
+				"typeProperties": {
+					"relativeUrl": "/_search/scroll"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/QA Elastic')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/QASchemas')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "MySQLDatabase",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "Id",
+						"type": "nvarchar"
+					},
+					{
+						"name": "AppId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "IsPublished",
+						"type": "bit"
+					},
+					{
+						"name": "IsDeleted",
+						"type": "bit"
+					},
+					{
+						"name": "Created",
+						"type": "datetimeoffset",
+						"scale": 7
+					},
+					{
+						"name": "CreatedBy",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LastModifiedBy",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LastModified",
+						"type": "datetimeoffset",
+						"scale": 7
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "ContentTypes"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/KrakenVault')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureKeyVault",
+				"typeProperties": {
+					"baseUrl": "https://KrakenVault.vault.azure.net/"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/QA Elastic')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "RestService",
+				"typeProperties": {
+					"url": "https://fed50f2acfd5466b950d6a162b6a0ee4.us-east-1.aws.found.io:9243/",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "Basic",
+					"userName": "kraken",
+					"password": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "KrakenVault",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "elasticPassword"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/KrakenVault')]"
 			]
 		},
 		{
@@ -1034,8 +906,7 @@
 						"pipelineReference": {
 							"referenceName": "KrakenQA To SQL",
 							"type": "PipelineReference"
-						},
-						"parameters": {}
+						}
 					}
 				],
 				"type": "ScheduleTrigger",
@@ -1058,6 +929,46 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/KrakenQA To SQL')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AppIdToId')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "QASchemas",
+								"type": "DatasetReference"
+							},
+							"name": "ContentTypesInput"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "QASchemas",
+								"type": "DatasetReference"
+							},
+							"name": "ContentTypesOutput"
+						}
+					],
+					"transformations": [
+						{
+							"name": "AppIdDerived"
+						},
+						{
+							"name": "AlterAppId"
+						}
+					],
+					"script": "\n\nsource(output(\n\t\tId as string,\n\t\tAppId as string,\n\t\tName as string,\n\t\tIsPublished as boolean,\n\t\tIsDeleted as boolean,\n\t\tCreated as string,\n\t\tCreatedBy as string,\n\t\tLastModifiedBy as string,\n\t\tLastModified as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tlimit: 100,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> ContentTypesInput\nAlterAppId derive(AppId = substring(AppId, 0, 36)) ~> AppIdDerived\nContentTypesInput alterRow(updateIf(length(AppId)>36)) ~> AlterAppId\nAppIdDerived sink(input(\n\t\tId as string,\n\t\tAppId as string,\n\t\tName as string,\n\t\tIsPublished as boolean,\n\t\tIsDeleted as boolean,\n\t\tCreated as string,\n\t\tCreatedBy as string,\n\t\tLastModifiedBy as string,\n\t\tLastModified as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tformat: 'table',\n\tkeys:['Id']) ~> ContentTypesOutput"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/QASchemas')]"
 			]
 		}
 	]

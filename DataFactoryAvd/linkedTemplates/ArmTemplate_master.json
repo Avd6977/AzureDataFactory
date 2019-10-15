@@ -19,6 +19,18 @@
 			"type": "string",
 			"defaultValue": "Squidex"
 		},
+		"KrakenVault_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://KrakenVault.vault.azure.net/"
+		},
+		"QA Elastic_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://fed50f2acfd5466b950d6a162b6a0ee4.us-east-1.aws.found.io:9243/"
+		},
+		"QA Elastic_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "kraken"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -54,6 +66,15 @@
 					},
 					"KrakenDB_properties_typeProperties_database": {
 						"value": "[parameters('KrakenDB_properties_typeProperties_database')]"
+					},
+					"KrakenVault_properties_typeProperties_baseUrl": {
+						"value": "[parameters('KrakenVault_properties_typeProperties_baseUrl')]"
+					},
+					"QA Elastic_properties_typeProperties_url": {
+						"value": "[parameters('QA Elastic_properties_typeProperties_url')]"
+					},
+					"QA Elastic_properties_typeProperties_userName": {
+						"value": "[parameters('QA Elastic_properties_typeProperties_userName')]"
 					}
 				}
 			},

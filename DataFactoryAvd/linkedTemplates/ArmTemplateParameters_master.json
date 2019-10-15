@@ -14,6 +14,15 @@
 		"KrakenDB_properties_typeProperties_database": {
 			"value": "Squidex"
 		},
+		"KrakenVault_properties_typeProperties_baseUrl": {
+			"value": "https://KrakenVault.vault.azure.net/"
+		},
+		"QA Elastic_properties_typeProperties_url": {
+			"value": "https://fed50f2acfd5466b950d6a162b6a0ee4.us-east-1.aws.found.io:9243/"
+		},
+		"QA Elastic_properties_typeProperties_userName": {
+			"value": "kraken"
+		},
 		"containerUri": {
 			"value": ""
 		},
