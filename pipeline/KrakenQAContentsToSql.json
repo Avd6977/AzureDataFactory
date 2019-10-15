@@ -129,11 +129,6 @@
 							},
 							{
 								"source": {
-									"path": "$['hits']['hits'][0]['_source']['dataDraft']['assetsFieldProperties'][0]['fieldData']['en']"
-								}
-							},
-							{
-								"source": {
 									"path": "$['hits']['hits'][0]['_source']['cats']"
 								},
 								"sink": {
