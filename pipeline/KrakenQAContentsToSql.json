@@ -245,7 +245,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@lessOrEquals(activity('GetTotal').output['firstRow']['Total'], variables('from'))",
+						"value": "@lessOrEquals(int(activity('GetTotal').output['firstRow']['Total']), int(variables('from')))",
 						"type": "Expression"
 					},
 					"activities": [
@@ -430,7 +430,7 @@
 							"typeProperties": {
 								"variableName": "fromIncrement",
 								"value": {
-									"value": "@string(add(variables('from'), variables('size')))",
+									"value": "@string(add(int(variables('from')), int(variables('size'))))",
 									"type": "Expression"
 								}
 							}
