@@ -1,0 +1,15 @@
+{
+	"name": "QAElasticContent_Paged",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "QA Elastic",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"typeProperties": {
+			"relativeUrl": "/_search/scroll"
+		},
+		"schema": []
+	}
+}
