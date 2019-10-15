@@ -33,7 +33,8 @@
 									"path": "['_source']['id']"
 								},
 								"sink": {
-									"name": ""
+									"name": "Id",
+									"type": "String"
 								}
 							},
 							{
