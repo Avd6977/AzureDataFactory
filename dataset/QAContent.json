@@ -1,0 +1,76 @@
+{
+	"name": "QAContent",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "MySQLDatabase",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "Id",
+				"type": "nvarchar"
+			},
+			{
+				"name": "AppId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "AppName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ContentTypeId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ContentTypeName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Status",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Data",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PermissionSet",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Categories",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Created",
+				"type": "datetimeoffset",
+				"scale": 7
+			},
+			{
+				"name": "CreatedBy",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LastModifiedBy",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LastModified",
+				"type": "datetimeoffset",
+				"scale": 7
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Content"
+		}
+	}
+}

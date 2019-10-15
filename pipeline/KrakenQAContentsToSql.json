@@ -1,0 +1,173 @@
+{
+	"name": "KrakenQAContentsToSql",
+	"properties": {
+		"activities": [
+			{
+				"name": "CopyContents",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RestSource",
+						"httpRequestTimeout": "00:01:40",
+						"requestInterval": "00.00:00:00.010",
+						"requestMethod": "GET"
+					},
+					"sink": {
+						"type": "AzureSqlSink"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "$['hits']['hits'][0]['_source']['id']"
+								},
+								"sink": {
+									"name": "Id",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['hits']['hits'][0]['_source']['status']"
+								},
+								"sink": {
+									"name": "Status",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "$['hits']['hits'][0]['_source']['lastModified']"
+								},
+								"sink": {
+									"name": "LastModified",
+									"type": "DateTimeOffset"
+								}
+							},
+							{
+								"source": {
+									"path": "$['hits']['hits'][0]['_source']['lastModifiedBy']"
+								},
+								"sink": {
+									"name": "LastModifiedBy",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['hits']['hits'][0]['_source']['created']"
+								},
+								"sink": {
+									"name": "Created",
+									"type": "DateTimeOffset"
+								}
+							},
+							{
+								"source": {
+									"path": "$['hits']['hits'][0]['_source']['isDeleted']"
+								},
+								"sink": {
+									"name": "IsDeleted",
+									"type": "Boolean"
+								}
+							},
+							{
+								"source": {
+									"path": "$['hits']['hits'][0]['_source']['appId']['id']"
+								},
+								"sink": {
+									"name": "AppId",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['hits']['hits'][0]['_source']['appId']['name']"
+								},
+								"sink": {
+									"name": "AppName",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['hits']['hits'][0]['_source']['schemaId']['id']"
+								},
+								"sink": {
+									"name": "ContentTypeId",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['hits']['hits'][0]['_source']['schemaId']['name']"
+								},
+								"sink": {
+									"name": "ContentTypeName",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['hits']['hits'][0]['_source']['createdBy']"
+								},
+								"sink": {
+									"name": "CreatedBy",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['hits']['hits'][0]['_source']['dataDraft']['assetsFieldProperties'][0]['fieldData']['en']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['hits']['hits'][0]['_source']['cats']"
+								},
+								"sink": {
+									"name": "Categories",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['hits']['hits'][0]['_source']['ps']"
+								},
+								"sink": {
+									"name": "PermissionSet",
+									"type": "String"
+								}
+							}
+						],
+						"collectionReference": ""
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "QAElasticContent",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "QAContent",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": []
+	}
+}
