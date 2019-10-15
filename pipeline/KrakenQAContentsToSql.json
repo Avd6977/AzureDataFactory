@@ -143,15 +143,6 @@
 							},
 							{
 								"source": {
-									"path": "['_source']['ps']"
-								},
-								"sink": {
-									"name": "PermissionSet",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
 									"path": "$['hits']['total']"
 								},
 								"sink": {
@@ -385,15 +376,6 @@
 											},
 											"sink": {
 												"name": "CreatedBy",
-												"type": "String"
-											}
-										},
-										{
-											"source": {
-												"path": "['_source']['ps']"
-											},
-											"sink": {
-												"name": "PermissionSet",
 												"type": "String"
 											}
 										},
