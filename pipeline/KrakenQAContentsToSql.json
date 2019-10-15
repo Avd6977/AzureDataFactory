@@ -5,7 +5,14 @@
 			{
 				"name": "CopyContents",
 				"type": "Copy",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "DeleteContents",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -337,6 +344,32 @@
 						"type": "DatasetReference"
 					}
 				]
+			},
+			{
+				"name": "DeleteContents",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[ClearMongoData]",
+					"storedProcedureParameters": {
+						"tableName": {
+							"value": "Content",
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "MySQLDatabase",
+					"type": "LinkedServiceReference"
+				}
 			}
 		],
 		"variables": {
