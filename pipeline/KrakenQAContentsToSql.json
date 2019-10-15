@@ -184,7 +184,7 @@
 				"typeProperties": {
 					"variableName": "scrollId",
 					"value": {
-						"value": "@activity('CopyContents').outputactivity('GetScrollId').output",
+						"value": "@activity('GetScrollId').output",
 						"type": "Expression"
 					}
 				}
