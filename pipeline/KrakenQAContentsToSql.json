@@ -28,7 +28,7 @@
 						"requestInterval": "00.00:00:00.010",
 						"requestMethod": "POST",
 						"requestBody": {
-							"value": "{\n    \"size\": \"500\",\n    \"from\": @{variables('total')\n}",
+							"value": "{\n    \"size\": \"500\"\n}",
 							"type": "Expression"
 						},
 						"additionalHeaders": {
@@ -177,171 +177,6 @@
 				]
 			},
 			{
-				"name": "CopyContents_Paged",
-				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "GetScrollId",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "RestSource",
-						"httpRequestTimeout": "00:01:40",
-						"requestInterval": "00.00:00:00.010",
-						"requestMethod": "POST",
-						"requestBody": {
-							"value": "{\n    \"scroll\": \"1m\",\n    \"scroll_id\": \"@{activity('GetScrollId').output['firstRow']['ScrollId']}\"\n}",
-							"type": "Expression"
-						},
-						"additionalHeaders": {
-							"Content-Type": "application/json"
-						}
-					},
-					"sink": {
-						"type": "AzureSqlSink"
-					},
-					"enableStaging": false,
-					"translator": {
-						"type": "TabularTranslator",
-						"mappings": [
-							{
-								"source": {
-									"path": "['_source']['id']"
-								},
-								"sink": {
-									"name": "Id",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"path": "['_source']['status']"
-								},
-								"sink": {
-									"name": "Status",
-									"type": "Int32"
-								}
-							},
-							{
-								"source": {
-									"path": "['_source']['lastModified']"
-								},
-								"sink": {
-									"name": "LastModified",
-									"type": "DateTimeOffset"
-								}
-							},
-							{
-								"source": {
-									"path": "['_source']['lastModifiedBy']"
-								},
-								"sink": {
-									"name": "LastModifiedBy",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"path": "['_source']['created']"
-								},
-								"sink": {
-									"name": "Created",
-									"type": "DateTimeOffset"
-								}
-							},
-							{
-								"source": {
-									"path": "['_source']['isDeleted']"
-								},
-								"sink": {
-									"name": "IsDeleted",
-									"type": "Boolean"
-								}
-							},
-							{
-								"source": {
-									"path": "['_source']['appId']['id']"
-								},
-								"sink": {
-									"name": "AppId",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"path": "['_source']['appId']['name']"
-								},
-								"sink": {
-									"name": "AppName",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"path": "['_source']['schemaId']['id']"
-								},
-								"sink": {
-									"name": "ContentTypeId",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"path": "['_source']['schemaId']['name']"
-								},
-								"sink": {
-									"name": "ContentTypeName",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"path": "['_source']['createdBy']"
-								},
-								"sink": {
-									"name": "CreatedBy",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"path": "['_source']['ps']"
-								},
-								"sink": {
-									"name": "PermissionSet",
-									"type": "String"
-								}
-							}
-						],
-						"collectionReference": "$['hits']['hits']"
-					}
-				},
-				"inputs": [
-					{
-						"referenceName": "QAElasticContent_Paged",
-						"type": "DatasetReference"
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "QAContent",
-						"type": "DatasetReference"
-					}
-				]
-			},
-			{
 				"name": "DeleteContents",
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [],
@@ -368,7 +203,7 @@
 				}
 			},
 			{
-				"name": "GetScrollId",
+				"name": "GetTotal",
 				"type": "Lookup",
 				"dependsOn": [
 					{
@@ -388,19 +223,248 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "AzureSqlSource"
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "select Total from Content where Id = (select MAX(Id) from Content)"
 					},
 					"dataset": {
 						"referenceName": "QAContent",
 						"type": "DatasetReference"
 					}
 				}
+			},
+			{
+				"name": "UntilNoNewContent",
+				"type": "Until",
+				"dependsOn": [
+					{
+						"activity": "GetTotal",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@lessOrEquals(activity('GetTotal').output['firstRow']['Total'], variables('from'))",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "CopyContents_Paged",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "ResetFrom",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "RestSource",
+									"httpRequestTimeout": "00:01:40",
+									"requestInterval": "00.00:00:00.010",
+									"requestMethod": "POST",
+									"requestBody": {
+										"value": "{\n    \"size\": @{variables('size')},\n    \"from\": @{variables('from')}\n}",
+										"type": "Expression"
+									},
+									"additionalHeaders": {
+										"Content-Type": "application/json"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink"
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"mappings": [
+										{
+											"source": {
+												"path": "['_source']['id']"
+											},
+											"sink": {
+												"name": "Id",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "['_source']['status']"
+											},
+											"sink": {
+												"name": "Status",
+												"type": "Int32"
+											}
+										},
+										{
+											"source": {
+												"path": "['_source']['lastModified']"
+											},
+											"sink": {
+												"name": "LastModified",
+												"type": "DateTimeOffset"
+											}
+										},
+										{
+											"source": {
+												"path": "['_source']['lastModifiedBy']"
+											},
+											"sink": {
+												"name": "LastModifiedBy",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "['_source']['created']"
+											},
+											"sink": {
+												"name": "Created",
+												"type": "DateTimeOffset"
+											}
+										},
+										{
+											"source": {
+												"path": "['_source']['isDeleted']"
+											},
+											"sink": {
+												"name": "IsDeleted",
+												"type": "Boolean"
+											}
+										},
+										{
+											"source": {
+												"path": "['_source']['appId']['id']"
+											},
+											"sink": {
+												"name": "AppId",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "['_source']['appId']['name']"
+											},
+											"sink": {
+												"name": "AppName",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "['_source']['schemaId']['id']"
+											},
+											"sink": {
+												"name": "ContentTypeId",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "['_source']['schemaId']['name']"
+											},
+											"sink": {
+												"name": "ContentTypeName",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "['_source']['createdBy']"
+											},
+											"sink": {
+												"name": "CreatedBy",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "['_source']['ps']"
+											},
+											"sink": {
+												"name": "PermissionSet",
+												"type": "String"
+											}
+										}
+									],
+									"collectionReference": "$['hits']['hits']"
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "QAElasticContent",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "QAContent",
+									"type": "DatasetReference"
+								}
+							]
+						},
+						{
+							"name": "IncrementFrom",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "fromIncrement",
+								"value": {
+									"value": "@string(add(variables('from'), variables('size')))",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "ResetFrom",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "IncrementFrom",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "fromIncrement",
+								"value": {
+									"value": "@variables('fromIncrement')",
+									"type": "Expression"
+								}
+							}
+						}
+					],
+					"timeout": "7.00:00:00"
+				}
 			}
 		],
 		"variables": {
-			"total": {
+			"fromIncrement": {
 				"type": "String",
-				"defaultValue": "0"
+				"defaultValue": "500"
+			},
+			"from": {
+				"type": "String",
+				"defaultValue": "500"
+			},
+			"size": {
+				"type": "String",
+				"defaultValue": "500"
 			}
 		},
 		"annotations": []
