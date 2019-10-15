@@ -30,7 +30,7 @@
 						"mappings": [
 							{
 								"source": {
-									"path": "$['hits']['hits'][0]['_source']['id']"
+									"path": "['_source']['id']"
 								},
 								"sink": {
 									"name": "Id",
@@ -39,7 +39,7 @@
 							},
 							{
 								"source": {
-									"path": "$['hits']['hits'][0]['_source']['status']"
+									"path": "['_source']['status']"
 								},
 								"sink": {
 									"name": "Status",
@@ -48,7 +48,7 @@
 							},
 							{
 								"source": {
-									"path": "$['hits']['hits'][0]['_source']['lastModified']"
+									"path": "['_source']['lastModified']"
 								},
 								"sink": {
 									"name": "LastModified",
@@ -57,7 +57,7 @@
 							},
 							{
 								"source": {
-									"path": "$['hits']['hits'][0]['_source']['lastModifiedBy']"
+									"path": "['_source']['lastModifiedBy']"
 								},
 								"sink": {
 									"name": "LastModifiedBy",
@@ -66,7 +66,7 @@
 							},
 							{
 								"source": {
-									"path": "$['hits']['hits'][0]['_source']['created']"
+									"path": "['_source']['created']"
 								},
 								"sink": {
 									"name": "Created",
@@ -75,7 +75,7 @@
 							},
 							{
 								"source": {
-									"path": "$['hits']['hits'][0]['_source']['isDeleted']"
+									"path": "['_source']['isDeleted']"
 								},
 								"sink": {
 									"name": "IsDeleted",
@@ -84,7 +84,7 @@
 							},
 							{
 								"source": {
-									"path": "$['hits']['hits'][0]['_source']['appId']['id']"
+									"path": "['_source']['appId']['id']"
 								},
 								"sink": {
 									"name": "AppId",
@@ -93,7 +93,7 @@
 							},
 							{
 								"source": {
-									"path": "$['hits']['hits'][0]['_source']['appId']['name']"
+									"path": "['_source']['appId']['name']"
 								},
 								"sink": {
 									"name": "AppName",
@@ -102,7 +102,7 @@
 							},
 							{
 								"source": {
-									"path": "$['hits']['hits'][0]['_source']['schemaId']['id']"
+									"path": "['_source']['schemaId']['id']"
 								},
 								"sink": {
 									"name": "ContentTypeId",
@@ -111,7 +111,7 @@
 							},
 							{
 								"source": {
-									"path": "$['hits']['hits'][0]['_source']['schemaId']['name']"
+									"path": "['_source']['schemaId']['name']"
 								},
 								"sink": {
 									"name": "ContentTypeName",
@@ -120,7 +120,7 @@
 							},
 							{
 								"source": {
-									"path": "$['hits']['hits'][0]['_source']['createdBy']"
+									"path": "['_source']['createdBy']"
 								},
 								"sink": {
 									"name": "CreatedBy",
@@ -129,16 +129,7 @@
 							},
 							{
 								"source": {
-									"path": "$['hits']['hits'][0]['_source']['cats']"
-								},
-								"sink": {
-									"name": "Categories",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"path": "$['hits']['hits'][0]['_source']['ps']"
+									"path": "['_source']['ps']"
 								},
 								"sink": {
 									"name": "PermissionSet",
@@ -146,7 +137,7 @@
 								}
 							}
 						],
-						"collectionReference": ""
+						"collectionReference": "$['hits']['hits']"
 					}
 				},
 				"inputs": [
