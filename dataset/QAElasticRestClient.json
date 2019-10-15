@@ -1,0 +1,12 @@
+{
+	"name": "QAElasticRestClient",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "QA Elastic",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"schema": []
+	}
+}
