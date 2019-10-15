@@ -19,7 +19,185 @@
 						"type": "RestSource",
 						"httpRequestTimeout": "00:01:40",
 						"requestInterval": "00.00:00:00.010",
-						"requestMethod": "GET"
+						"requestMethod": "POST"
+					},
+					"sink": {
+						"type": "AzureSqlSink"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "['_source']['id']"
+								},
+								"sink": {
+									"name": ""
+								}
+							},
+							{
+								"source": {
+									"path": "['_source']['status']"
+								},
+								"sink": {
+									"name": "Status",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "['_source']['lastModified']"
+								},
+								"sink": {
+									"name": "LastModified",
+									"type": "DateTimeOffset"
+								}
+							},
+							{
+								"source": {
+									"path": "['_source']['lastModifiedBy']"
+								},
+								"sink": {
+									"name": "LastModifiedBy",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['_source']['created']"
+								},
+								"sink": {
+									"name": "Created",
+									"type": "DateTimeOffset"
+								}
+							},
+							{
+								"source": {
+									"path": "['_source']['isDeleted']"
+								},
+								"sink": {
+									"name": "IsDeleted",
+									"type": "Boolean"
+								}
+							},
+							{
+								"source": {
+									"path": "['_source']['appId']['id']"
+								},
+								"sink": {
+									"name": "AppId",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['_source']['appId']['name']"
+								},
+								"sink": {
+									"name": "AppName",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['_source']['schemaId']['id']"
+								},
+								"sink": {
+									"name": "ContentTypeId",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['_source']['schemaId']['name']"
+								},
+								"sink": {
+									"name": "ContentTypeName",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['_source']['createdBy']"
+								},
+								"sink": {
+									"name": "CreatedBy",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "['_source']['ps']"
+								},
+								"sink": {
+									"name": "PermissionSet",
+									"type": "String"
+								}
+							}
+						],
+						"collectionReference": "$['hits']['hits']"
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "QAElasticContent",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "QAContent",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "CopyContents",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "scrollId",
+					"value": ""
+				}
+			},
+			{
+				"name": "CopyContents_Paged",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Set variable1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RestSource",
+						"httpRequestTimeout": "00:01:40",
+						"requestInterval": "00.00:00:00.010",
+						"requestMethod": "POST",
+						"requestBody": {
+							"value": "{\n    \"scroll\": \"1m\",\n     \"scrollId\": @{variables('scrollId')}\n}",
+							"type": "Expression"
+						}
 					},
 					"sink": {
 						"type": "AzureSqlSink"
@@ -142,7 +320,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "QAElasticContent",
+						"referenceName": "QAElasticContent_Paged",
 						"type": "DatasetReference"
 					}
 				],
@@ -154,6 +332,11 @@
 				]
 			}
 		],
+		"variables": {
+			"scrollId": {
+				"type": "String"
+			}
+		},
 		"annotations": []
 	}
 }
