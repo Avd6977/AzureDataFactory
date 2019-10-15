@@ -1,0 +1,21 @@
+{
+	"name": "QA Elastic",
+	"properties": {
+		"annotations": [],
+		"type": "RestService",
+		"typeProperties": {
+			"url": "https://fed50f2acfd5466b950d6a162b6a0ee4.us-east-1.aws.found.io:9243/",
+			"enableServerCertificateValidation": true,
+			"authenticationType": "Basic",
+			"userName": "kraken",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "KrakenVault",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "elasticPassword"
+			}
+		}
+	}
+}
