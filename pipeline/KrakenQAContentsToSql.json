@@ -152,11 +152,10 @@
 							},
 							{
 								"source": {
-									"path": "$['_scroll_id']"
+									"path": "$['hits']['total']"
 								},
 								"sink": {
-									"name": "ScrollId",
-									"type": "String"
+									"name": "Total"
 								}
 							}
 						],
@@ -396,6 +395,14 @@
 											"sink": {
 												"name": "PermissionSet",
 												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "$['hits']['total']"
+											},
+											"sink": {
+												"name": "Total"
 											}
 										}
 									],
