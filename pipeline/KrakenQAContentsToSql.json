@@ -142,6 +142,15 @@
 									"name": "PermissionSet",
 									"type": "String"
 								}
+							},
+							{
+								"source": {
+									"path": "$['_scroll_id']"
+								},
+								"sink": {
+									"name": "ScrollId",
+									"type": "String"
+								}
 							}
 						],
 						"collectionReference": "$['hits']['hits']"
@@ -161,11 +170,11 @@
 				]
 			},
 			{
-				"name": "Set variable1",
+				"name": "SetScrollId",
 				"type": "SetVariable",
 				"dependsOn": [
 					{
-						"activity": "CopyContents",
+						"activity": "GetScrollId",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -175,7 +184,7 @@
 				"typeProperties": {
 					"variableName": "scrollId",
 					"value": {
-						"value": "@activity('CopyContents').output",
+						"value": "@activity('CopyContents').outputactivity('GetScrollId').output",
 						"type": "Expression"
 					}
 				}
@@ -185,7 +194,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Set variable1",
+						"activity": "SetScrollId",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -369,6 +378,35 @@
 				"linkedServiceName": {
 					"referenceName": "MySQLDatabase",
 					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "GetScrollId",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "CopyContents",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource"
+					},
+					"dataset": {
+						"referenceName": "QAContent",
+						"type": "DatasetReference"
+					}
 				}
 			}
 		],
