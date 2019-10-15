@@ -441,7 +441,7 @@
 							],
 							"userProperties": [],
 							"typeProperties": {
-								"variableName": "fromIncrement",
+								"variableName": "from",
 								"value": {
 									"value": "@variables('fromIncrement')",
 									"type": "Expression"
