@@ -1,5 +1,5 @@
 {
-	"name": "QAElasticRestClient",
+	"name": "QAElasticContent",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "QA Elastic",
@@ -7,6 +7,9 @@
 		},
 		"annotations": [],
 		"type": "RestResource",
+		"typeProperties": {
+			"relativeUrl": "/krakenqa_states_contents/elasticcontententity/_search"
+		},
 		"schema": []
 	}
 }
