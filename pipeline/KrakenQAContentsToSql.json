@@ -166,7 +166,10 @@
 				"userProperties": [],
 				"typeProperties": {
 					"variableName": "scrollId",
-					"value": ""
+					"value": {
+						"value": "@activity('CopyContents').output",
+						"type": "Expression"
+					}
 				}
 			},
 			{
@@ -195,8 +198,11 @@
 						"requestInterval": "00.00:00:00.010",
 						"requestMethod": "POST",
 						"requestBody": {
-							"value": "{\n    \"scroll\": \"1m\",\n     \"scrollId\": @{variables('scrollId')}\n}",
+							"value": "{\n    \"scroll\": \"1m\",\n    \"scroll_id\": @variables('scrollId')\n}",
 							"type": "Expression"
+						},
+						"additionalHeaders": {
+							"Content-Type": "application/json"
 						}
 					},
 					"sink": {
