@@ -236,7 +236,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@less(int(activity('GetTotal').output['firstRow']['Total']), add(int(variables('size')), int(variables('from'))))",
+						"value": "@less(int(activity('GetTotal').output['firstRow']['Total']), sub(int(variables('from')), int(variables('size'))))",
 						"type": "Expression"
 					},
 					"activities": [
