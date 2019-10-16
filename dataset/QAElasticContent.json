@@ -8,7 +8,7 @@
 		"annotations": [],
 		"type": "RestResource",
 		"typeProperties": {
-			"relativeUrl": "/krakenqa_states_contents/elasticcontententity/_search"
+			"relativeUrl": "/krakenauto_states_contents/elasticcontententity/_search"
 		},
 		"schema": []
 	}
